@@ -2,38 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Electricity Bill Splitter</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-  <h1>⚡ Electricity Bill Splitter</h1>
-
-  <label>Total Electricity Bill (₹)</label>
-  <input type="number" id="totalBill" placeholder="Enter total bill">
-
-  <h2>Shops / Flats</h2>
-
-  <div id="shops">
-
-    <div class="shop">
-      <input type="text" placeholder="Shop Name" class="name">
-      <input type="number" placeholder="Previous Reading" class="prev">
-      <input type="number" placeholder="Current Reading" class="curr">
-    </div>
-
-    <div class="shop">
-      <input type="text" placeholder="Shop Name" class="name">
-      <input type="number" placeholder="Previous Reading" class="prev">
-      <input type="number" placeholder="Current Reading" class="curr">
-    </div>
-
+  <div class="header">
+    <h1>⚡ Electricity Bill Splitter</h1>
+    <p class="subtitle">Split bills fairly and easily</p>
   </div>
 
-  <button onclick="addShop()">+ Add Shop</button>
-  <button onclick="calculate()">Calculate</button>
-  <button onclick="resetForm()">Reset</button>
+  <div class="form-group">
+    <label for="totalBill">Total Electricity Bill (₹)</label>
+    <input type="number" id="totalBill" placeholder="Enter total bill amount" min="0" step="0.01">
+  </div>
+
+  <div class="shops-section">
+    <div class="section-header">
+      <h2>📍 Shops / Flats</h2>
+      <span class="shop-count">1 Shop</span>
+    </div>
+
+    <div id="shops"></div>
+
+    <button class="btn btn-secondary" onclick="addShop()">+ Add Shop</button>
+  </div>
+
+  <div class="button-group">
+    <button class="btn btn-primary" onclick="calculate()">📊 Calculate</button>
+    <button class="btn btn-danger" onclick="resetForm()">🔄 Reset</button>
+  </div>
 
   <div id="result"></div>
 </div>
