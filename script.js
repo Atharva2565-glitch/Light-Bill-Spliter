@@ -2,18 +2,31 @@ function addShop() {
   let div = document.createElement("div");
   div.className = "shop";
 
+  let shopCount = document.querySelectorAll(".shop").length + 1;
+
   div.innerHTML = `
-    <input type="text" placeholder="Shop Name" class="name">
-    <input type="number" placeholder="Previous Reading" class="prev">
-    <input type="number" placeholder="Current Reading" class="curr">
+    <input type="text" placeholder="Shop ${shopCount} Name" class="name">
+    <input type="number" placeholder="Previous Reading" class="prev" min="0">
+    <input type="number" placeholder="Current Reading" class="curr" min="0">
   `;
 
   document.getElementById("shops").appendChild(div);
+  updateShopCount();
+}
+
+function updateShopCount() {
+  let count = document.querySelectorAll(".shop").length;
+  let shopCountElement = document.querySelector(".shop-count");
+  shopCountElement.textContent = count + " Shop" + (count !== 1 ? "s" : "");
 }
 
 function calculate() {
-
   let totalBill = Number(document.getElementById("totalBill").value);
+
+  if (totalBill <= 0) {
+    alert("Please enter a valid bill amount!");
+    return;
+  }
 
   let names = document.getElementsByClassName("name");
   let prevs = document.getElementsByClassName("prev");
@@ -24,13 +37,17 @@ function calculate() {
 
   // Step 1: Calculate units
   for (let i = 0; i < names.length; i++) {
-
-    let name = names[i].value || `Shop ${i+1}`;
+    let name = names[i].value.trim() || `Shop ${i+1}`;
     let prev = Number(prevs[i].value);
     let curr = Number(currs[i].value);
 
+    if (isNaN(prev) || isNaN(curr)) {
+      alert("Please enter valid readings!");
+      return;
+    }
+
     if (curr <= prev) {
-      alert("Current reading must be greater than previous!");
+      alert(`${name}: Current reading must be greater than previous!`);
       return;
     }
 
@@ -46,30 +63,36 @@ function calculate() {
   }
 
   // Step 2: Apply formula
-  let output = `<h3>Result</h3>`;
+  let output = `<h3>📊 Bill Distribution</h3>`;
+  let totalCalculated = 0;
 
-  shops.forEach(shop => {
+  shops.forEach((shop, index) => {
     let bill = (shop.units / totalUnits) * totalBill;
-    output += `${shop.name} → ${shop.units} units = ₹${bill.toFixed(2)} <br>`;
+    totalCalculated += bill;
+    output += `<div class="result-item"><strong>${shop.name}</strong><br>Units: ${shop.units} | Amount: ₹${bill.toFixed(2)}</div>`;
   });
 
-  output += `<br><b>Total Units:</b> ${totalUnits}`;
+  output += `<div style="margin-top: 15px; padding: 10px; background: white; border-radius: 5px; border-left: 3px solid #667eea;">
+    <strong>📈 Total Units:</strong> ${totalUnits}<br>
+    <strong>💰 Total Bill:</strong> ₹${totalCalculated.toFixed(2)}
+  </div>`;
 
-  document.getElementById("result").innerHTML = output;
+  let resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = output;
+  resultDiv.classList.add("show");
 }
 
 function resetForm() {
   document.getElementById("totalBill").value = "";
   document.getElementById("shops").innerHTML = "";
   document.getElementById("result").innerHTML = "";
+  document.getElementById("result").classList.remove("show");
 
-  // Add 2 default shops again
-  addShop();
+  // Add 1 default shop again
   addShop();
 }
 
-// Load default shops
+// Load default shop
 window.onload = function() {
-  addShop();
   addShop();
 }
